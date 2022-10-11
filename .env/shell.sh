@@ -4,6 +4,8 @@ alias zshrc="open ~/.zshrc"
 alias c="code ."
 alias rf="clear && exec $SHELL"
 alias rp="cd ~/repos"
+alias localIp="ipconfig getifaddr en0"
+
 repos=(
 	terraform-integrations 
 	darkwing-dotnet 
