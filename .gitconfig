@@ -1,0 +1,19 @@
+[user]
+	name = Aaron Roethe
+	email = roethe.aaron@outlook.com
+
+[init]
+    defaultBranch = master
+
+[status]
+    short = true
+
+[fetch]
+	prune = true
+
+[alias]
+	pushu = "git push origin $(git_current_branch) -u"
+	
+	log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
+	
+	rm-mb = "!git fetch && git branch --merged | egrep -v 'master' | xargs git branch -d"
