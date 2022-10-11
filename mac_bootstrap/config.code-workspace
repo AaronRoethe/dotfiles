@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "../mac_bootstrap"
+		},
+		{
+			"path": "../.ssh"
+		},
+		{
+			"path": "../"
+		},
+		{
+			"path": "../.env"
+		}
+	],
+	"settings": {}
+}
