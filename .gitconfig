@@ -5,14 +5,11 @@
 [init]
     defaultBranch = master
 
-[status]
-    short = true
-
 [fetch]
 	prune = true
 
 [alias]
-	pushu = "git push origin $(git_current_branch) -u"
+	pushu = "push origin $(git_current_branch) -u"
 	
 	log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
 	
