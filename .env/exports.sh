@@ -1,8 +1,7 @@
-ZSH_DOTENV_FILE=.env
-ZSH_DOTENV_PROMPT=false
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
 
-ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd*|git*"
-#ZSH_AUTOSUGGEST_COMPLETION_IGNORE="gc*+"
-
-export GOPATH=~/repos/go
-export PATH=$PATH:$GOPATH/bin
+export GOPATH="$HOME/repos/go"
+export GOROOT="$(brew --prefix go)/libexec"
+export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:$GOROOT/bin"
