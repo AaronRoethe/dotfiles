@@ -1,4 +1,5 @@
 alias zshrc="open ~/.zshrc"
+alias c="code ."
 alias rf="clear && exec $SHELL"
 alias rp="cd ~/repos"
 repoList="
