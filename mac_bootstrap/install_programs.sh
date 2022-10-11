@@ -13,4 +13,5 @@ brew install --cask spotify
 brew install --cask slack
 brew install --cask postman
 brew install --cask docker
+brew install --cask insomnia
 brew install --cask microsoft-remote-desktop
