@@ -8,6 +8,7 @@ brew install ripgrep
 brew install --cask iterm2
 brew install --cask microsoft-edge
 brew install --cask bitwarden
+brew install --cask rectangle
 brew install --cask visual-studio-code
 brew install --cask spotify
 brew install --cask slack
