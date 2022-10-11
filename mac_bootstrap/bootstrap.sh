@@ -5,17 +5,18 @@ if [ ! "$(command -v brew)" ]; then
 if [ ! -d ~/.oh-my-zsh ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"; fi
 
-plugins="
+plugins=(
     zsh-syntax-highlighting
     zsh-autosuggestions
-    "
+)
 
 for plugin in $plugins; do
     location=${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/${plugin}
-    echo $location
     if [ ! -d $location ]; then
         git clone https://github.com/zsh-users/${plugin}.git $location
     fi
 done
+
+mkdir $HOME/repos/go
 
 sh ./install_programs.sh

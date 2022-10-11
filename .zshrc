@@ -17,9 +17,10 @@ bindkey "^ " autosuggest-accept
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
+ZSH_DOTENV_FILE=.env
+ZSH_DOTENV_PROMPT=false
+ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd*|git*"
 
 for config in $HOME/.env/*.sh;do
     source ${config}
 done
-
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
