@@ -5,8 +5,6 @@ ZSH_THEME="robbyrussell"
 plugins=(
     git
     dotenv
-    zsh-autosuggestions
-    zsh-syntax-highlighting
     copypath
     copyfile
     copybuffer
@@ -15,6 +13,8 @@ plugins=(
 bindkey "^ " autosuggest-accept
 
 source $ZSH/oh-my-zsh.sh
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # User configuration
 ZSH_DOTENV_FILE=.env
