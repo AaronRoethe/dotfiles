@@ -1,4 +1,5 @@
 alias pyActivate="source .venv/bin/activate" 
+alias pyR="cp ~/repos/utils/requirements.txt ."
 
 pyCreate () {
 	if [ -d .venv ];then 
