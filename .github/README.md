@@ -1,5 +1,5 @@
 # Setup
-`git clone --bare https://github.com/AaronRoethe/dotfiles.git $HOME/.cfg`
+`git clone --bare git@github.com:AaronRoethe/dotfiles.git $HOME/.cfg`
 
 or clone from a local friend:
 
