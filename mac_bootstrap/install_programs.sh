@@ -9,7 +9,8 @@ brew=(
     zsh-autosuggestions
     zsh-syntax-highlighting
     wget
-    nmap 
+    nmap
+    grep
     ripgrep
     gh
     azure-cli
@@ -17,12 +18,13 @@ brew=(
 )
 
 brewCask=(
-    iterm2
+    warp
     microsoft-edge
     bitwarden
     rectangle
     visual-studio-code
     spotify
+    discord
     slack
     postman
     docker
