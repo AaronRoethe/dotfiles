@@ -1,6 +1,6 @@
 [user]
 	name = Aaron Roethe
-	email = aroethe@axon.com
+	email = roethe.aaron@outlook.com
 	signingkey = 
 
 [init]
@@ -15,7 +15,9 @@
 	log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
 	
 	rm-mb = "!git fetch && git branch --merged | egrep -v 'master' | xargs git branch -d"
+
 [commit]
 	gpgsign = true
+
 [gpg]
 	program = /opt/homebrew/bin/gpg
