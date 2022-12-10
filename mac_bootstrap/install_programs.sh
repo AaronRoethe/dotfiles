@@ -13,6 +13,7 @@ brew=(
     grep
     ripgrep
     gh
+    gpg
     azure-cli
     azure-functions-core-tools@4
 )
