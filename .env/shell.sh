@@ -40,50 +40,42 @@ repos () {
 	done; cd ~/repos
 }
 addConfig () {
-	for file in `config status -s`;do 
-		if [[ $file =~ [\.] ]]; then
+	for file in `config status -s | awk '{print $2}'`;do
+		if [[ ${file##*/} != '.gitconfig' ]]; then
 			config add $file; fi 
 		done
 	config status
 }
 checkRelease () {
-	while getopts ":e:" opt; do
-        case $opt in
-            e)
-                enviornment="$OPTARG"
-                ;;
-            \?)
-                echo "Error: -$OPTARG is not a valid option" >&2
-                return
-                ;;
+	while getopts "e:" opt; do
+		case "${opt}" in
+			e) local enviornment="$OPTARG";;
         esac
     done
-    shift $((OPTIND-1))
     if [ -z "$enviornment" ]; then
-        echo "Error: -e (enviornment) is a required option" >&2
-        return
+        echo "Error: -e (enviornment) is a required option" >&2; return
     fi
+    shift $((OPTIND-1))
 
 	cd $HOME/repos/k8s-deploy
 	git checkout master -q && git pull --all -q && git pull --tags -q
-	output=$(grep targetRevision apps/rms/$enviornment/data-platform.yaml | sed 's/^[[:space:]]*//')
+	local output=$(grep targetRevision apps/rms/$enviornment/data-platform.yaml | sed 's/^[[:space:]]*//')
 	echo -e "K8s-deploy:\n$output\n"
 
-	release=$(echo $output | awk '{print $2}')
+	local release=$(echo $output | awk '{print $2}')
 
 	cd $HOME/repos/argo-apps
 	git pull --tags -q && git checkout $release -q
 	echo -e "argo-apps:"
 	if [ $# -gt 0 ]
     then
-		for arg in "$@"
-		do
-			targetService=$arg
-			output=$(grep newTag data-platform/overlay/$enviornment/$targetService/kustomization.yaml | sed 's/^[[:space:]]*//')
+		for arg in "$@"; do
+			local targetService=$arg
+			local output=$(grep newTag data-platform/overlay/$enviornment/$targetService/kustomization.yaml | sed 's/^[[:space:]]*//')
 			echo -e "$targetService\n$output"
 		done
 	else
-		output=$(grep newTag data-platform/overlay/$enviornment/translator/kustomization.yaml | sed 's/^[[:space:]]*//')
+		local output=$(grep newTag data-platform/overlay/$enviornment/translator/kustomization.yaml | sed 's/^[[:space:]]*//')
 		echo -e "translator\n$output"
     fi
 		git checkout master -q
