@@ -18,7 +18,7 @@ source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # User configuration
 ZSH_DOTENV_FILE=.env
-ZSH_DOTENV_PROMPT=false
+ZSH_DOTENV_PROMPT=true
 ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd*|git*"
 
 for config in $HOME/.env/*.sh;do
