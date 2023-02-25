@@ -4,7 +4,7 @@ alias zshrc="code ~/mac_bootstrap/config.code-workspace"
 alias c="code ."
 alias rf="clear && source $HOME/.zshrc"
 alias rp="cd $HOME/repos"
-alias localIp="ipconfig getifaddr en0"
+alias myIp="curl api.ipify.org && echo '\n'`ipconfig getifaddr en0`"
 
 workingRepos=(
 	terraform-integrations 
