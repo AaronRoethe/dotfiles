@@ -2,6 +2,7 @@
 	name = Aaron Roethe
 	email = roethe.aaron@outlook.com
 	signingkey = 
+	# gpg --list-secret-keys --keyid-format=long
 
 [init]
     defaultBranch = master
