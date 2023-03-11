@@ -26,6 +26,3 @@ for config in $HOME/.env/*.sh;do
 done
 
 echo "Welcome Back Aaron, Happy Coding!"
-export NVM_DIR=~/.nvm
-source $(brew --prefix nvm)/nvm.sh
-export GOPRIVATE=,git.taservs.net/*,git.taservs.net/*
