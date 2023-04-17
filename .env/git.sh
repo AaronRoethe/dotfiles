@@ -10,9 +10,9 @@ githome () {
     git stash pop    
     }
 
-slackMsg () {
-    gh pr list --state open --author aroethe --json title,url,headRepository,number --template \
-    '{{range .}}PR[`{{.headRepository.name}}`](#{{.number}}) {{.title}}{{"\n"}}{{.url}}{{"\n\n"}}{{end}}' | tee >(pbcopy)
+prMsg () {
+    gh pr list --state open --author aroethe --json title,url,headRepository --template \
+    '{{range .}}PR[`{{.headRepository.name}}`] {{.title}}{{"\n"}}{{.url}}{{"\n\n"}}{{end}}' | tee >(pbcopy)
 }
 
 createPR () {
