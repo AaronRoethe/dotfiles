@@ -24,5 +24,6 @@ ZSH_AUTOSUGGEST_HISTORY_IGNORE="cd*|git*"
 for config in $HOME/.env/*.sh;do
     source ${config}
 done
+source ~/.env/.env
 
 echo "Welcome Back Aaron, Happy Coding!"
