@@ -27,14 +27,14 @@ brewCask=(
     spotify
     discord
     slack
-    postman
     docker
     insomnia
     microsoft-remote-desktop
+    logi-options-plus
 )
 
 for tap in $brewTap; do
-    brew tap $tap
+    brew brew install --cask $tap
 done
 
 for tool in $brew; do
