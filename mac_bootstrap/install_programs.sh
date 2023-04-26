@@ -34,7 +34,7 @@ brewCask=(
 )
 
 for tap in $brewTap; do
-    brew brew install --cask $tap
+    brew tap $tap
 done
 
 for tool in $brew; do
@@ -44,5 +44,3 @@ done
 for program in $brewCask; do
     brew install --cask $program
 done
-
- 
