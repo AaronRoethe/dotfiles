@@ -13,6 +13,10 @@ ag () {
 	alias | grep $1
 }
 
+whatis () {
+	declare -f $1
+}
+
 lineBreak () {
 	printf -- '~%.0s' {1..50}; printf '\n'
 }
