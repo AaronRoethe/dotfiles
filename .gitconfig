@@ -11,11 +11,11 @@
 	prune = true
 
 [alias]
-	pushu = "push origin $(git_current_branch) -u"
-	
+	pu = "!git push origin $(git symbolic-ref --short HEAD) -u"
+
 	log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
 	
-	rm-mb = "!git fetch && git branch --merged | egrep -v 'master' | xargs git branch -d"
+	gbDa = "!git fetch -p --no-recurse-submodules && for branch in $(git branch -vv | awk '/: gone]/{print $1}'); do git branch -D $branch; done"
 
 [commit]
 	gpgsign = true

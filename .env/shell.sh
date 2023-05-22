@@ -27,4 +27,10 @@ addConfig () {
 			config add $file; fi 
 		done
 	config status
+	# Use the following to add chunks of a file
+	# config add -p
+}
+
+showConfigChanges () {
+	config diff --cached
 }
