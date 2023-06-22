@@ -7,9 +7,4 @@ if [ ! -d ~/.oh-my-zsh ]; then
 
 mkdir $HOME/repos/go
 
-sh ./install_programs.sh
-
-if [ ! -d ~/.cfg ]; then
-    git clone --config status.showUntrackedFiles=no --bare https://github.com/AaronRoethe/dotfiles.git $HOME/.cfg; fi
-    alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-    config restore --staged . && config restore .
+sh ~/mac_bootstrap/install_programs.sh
