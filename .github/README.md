@@ -24,6 +24,8 @@ or clone from a local friend:
 
 `gpg --full-generate-key`
 
+Pick `RSA and RSA`
+
 `gpg --list-secret-keys --keyid-format=long`
 
 copy command from above after rsa3072/<...>
