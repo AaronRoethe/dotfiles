@@ -1,6 +1,32 @@
 alias pyA="source .venv/bin/activate" 
 alias pyR="cp ~/repos/utils/requirements.txt ."
 
+pyF () {
+    target=${1:-src}
+    deactivate 2> /dev/null
+
+    # Define the list of packages
+    packages=(black isort flake8)
+
+    echo "Checking and installing required packages..."
+    for package in "${packages[@]}"; do
+        python -c "import $package" 2> /dev/null || pip install "$package"
+    done
+
+    echo "Formatting process started..."
+
+    # Silence output if packages are already installed
+    for package in "${packages[@]}"; do
+        python -m "$package" "$target"
+    done
+
+    # Check if .venv folder exists and activate virtual environment
+    if [ -d ".venv" ]; then
+        source .venv/bin/activate
+    fi
+}
+
+
 pyC () {
 	location="requirements.txt"
     venvName=".venv"

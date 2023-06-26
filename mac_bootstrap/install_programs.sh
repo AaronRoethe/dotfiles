@@ -35,6 +35,7 @@ brewCask=(
     slack
     docker
     insomnia
+    mysqlworkbench
     microsoft-remote-desktop
     logi-options-plus
 )
