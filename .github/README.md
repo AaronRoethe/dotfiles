@@ -35,3 +35,5 @@ copy command from above after rsa3072/<...>
 `git config --global user.signingKey <paste>`
 
 add the output into github
+
+# Mac setting preferences

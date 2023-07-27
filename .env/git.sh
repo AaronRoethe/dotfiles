@@ -9,8 +9,8 @@ githome () {
 }
 
 prMsg () {
-    gh pr list --state open --author aroethe --json title,url,headRepository --template \
-    '{{range .}}PR[`{{.headRepository.name}}`] {{.title}}{{"\n"}}{{.url}}{{"\n\n"}}{{end}}' | tee >(pbcopy)
+    gh pr list --state open --author aroethe --json additions,deletions,title,url,headRepository --template \
+    '{{range .}}*[{{.headRepository.name}}]* `+{{.additions}} -{{.deletions}}` {{.title}}{{"\n"}}{{.url}}{{"\n"}}{{end}}' | tee >(pbcopy)
 }
 
 createPR () {

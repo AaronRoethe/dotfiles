@@ -6,7 +6,7 @@ alias rf="clear && source $HOME/.zshrc"
 alias rp="cd $HOME/repos"
 alias myIp="curl api.ipify.org && echo '\n'`ipconfig getifaddr en0`"
 alias projects="code ~/OneDrive\ -\ Axon\ Enterprise/projects"
-alias integrations="code ~/repos/integrations/integrationTesting"
+alias integrations="code ~/repos/integrations/integrations-testing"
 alias datastore="code ~/repos/datastore/datastore-deployment-tool"
 
 ag () {
