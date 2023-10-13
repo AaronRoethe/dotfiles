@@ -1,13 +1,17 @@
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-
+# open important locations
+oneDrive="~/OneDrive\ -\ Axon\ Enterprise"
+alias manager="code ${oneDrive}/projects/manager"
+alias projects="code ${oneDrive}/projects"
 alias zshrc="code ~/mac_bootstrap/config.code-workspace"
+alias integrations="code ~/repos/integrations/integrations-testing"
+alias datastore="code ~/repos/datastore/datastore-deployment-tool"
+
 alias c="code ."
 alias rf="clear && source $HOME/.zshrc"
 alias rp="cd $HOME/repos"
 alias myIp="curl api.ipify.org && echo '\n'`ipconfig getifaddr en0`"
-alias projects="code ~/OneDrive\ -\ Axon\ Enterprise/projects"
-alias integrations="code ~/repos/integrations/integrations-testing"
-alias datastore="code ~/repos/datastore/datastore-deployment-tool"
+alias dailyNote="touch '$(date +%Y-%m-%d).md'"
 
 ag () {
 	alias | grep $1
