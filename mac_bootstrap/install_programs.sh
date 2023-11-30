@@ -22,6 +22,7 @@ brew=(
     gpg
     azure-cli
     azure-functions-core-tools@4
+    sqlcmd
 )
 
 brewCask=(

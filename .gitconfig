@@ -17,6 +17,8 @@
 	
 	gbDa = "!git fetch -p --no-recurse-submodules && for branch in $(git branch -vv | awk '/: gone]/{print $1}'); do git branch -D $branch; done"
 
+	nuke = "git reset --hard origin/master"
+
 [commit]
 	gpgsign = true
 

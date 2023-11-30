@@ -48,7 +48,7 @@ pyC () {
 	pyVersion=$( [ -f .python-version ] && echo "local" || echo "global" )
 
 	# Check pyVersion, create version file, virtual environment, activate it
-	pyenv version-name $pyVersion | xargs -I {} pyenv local {} && python -m venv $venvName
+	pyenv version-name $pyVersion | xargs -I {} pyenv local {} && python3 -m venv $venvName
 	source $venvName/bin/activate && pip install --upgrade pip
 	
 	# Install requirements if file exists, otherwise print error message
