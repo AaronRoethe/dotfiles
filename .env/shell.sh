@@ -1,8 +1,5 @@
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 # open important locations
-oneDrive="~/OneDrive\ -\ Axon\ Enterprise"
-alias manager="code ${oneDrive}/projects/manager"
-alias projects="code ${oneDrive}/projects"
 alias zshrc="code ~/mac_bootstrap/config.code-workspace"
 alias integrations="code ~/repos/integrations/integrations-testing"
 alias datastore="code ~/repos/datastore/datastore-deployment-tool"
