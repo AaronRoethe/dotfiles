@@ -32,10 +32,11 @@ pyC () {
     venvName=".venv"
     
     # Parse flags
-    while getopts "r:e:" opt; do
+    while getopts "r:e:c:" opt; do
         case $opt in
             e) venvName=$OPTARG ;;
             r) location=$OPTARG ;;
+            c) cache=$OPTARG ;;
             \?) echo "Invalid option: -$OPTARG" ;;
             :) echo "Option -$OPTARG requires an argument.";;
         esac
@@ -52,7 +53,7 @@ pyC () {
 	source $venvName/bin/activate && pip install --upgrade pip
 	
 	# Install requirements if file exists, otherwise print error message
-	[ -f $location ] && pip install -r $location || echo -e "\nFile $location not found"
+	[ -f $location ] && pip install --no-cache-dir -r $location || echo -e "\nFile $location not found"
 }
 
 
