@@ -32,4 +32,4 @@
     rebase = false
 
 [submodule]
-	recurse = true
+    recurse = true

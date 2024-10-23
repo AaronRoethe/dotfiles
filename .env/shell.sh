@@ -11,27 +11,27 @@ alias myIp="curl api.ipify.org && echo '\n'`ipconfig getifaddr en0`"
 alias dailyNote="touch '$(date +%Y-%m-%d).md'"
 
 ag () {
-	alias | grep $1
+    alias | grep $1
 }
 
 whatis () {
-	declare -f $1
+    declare -f $1
 }
 
 lineBreak () {
-	printf -- '~%.0s' {1..50}; printf '\n'
+    printf -- '~%.0s' {1..50}; printf '\n'
 }
 
 addConfig () {
-	for file in `config status -s | awk '{print $2}'`;do
-		if [[ ${file##*/} != '.gitconfig' ]]; then
-			config add $file; fi 
-		done
-	config status
-	# Use the following to add chunks of a file
-	# config add -p
+    for file in `config status -s | awk '{print $2}'`;do
+        if [[ ${file##*/} != '.gitconfig' ]]; then
+            config add $file; fi
+        done
+    config status
+    # Use the following to add chunks of a file
+    # config add -p
 }
 
 showConfigChanges () {
-	config diff --cached
+    config diff --cached
 }
