@@ -1,3 +1,6 @@
+# update this file with the following command:
+# config add -p ../.gitconfig
+
 [user]
 	name = Aaron Roethe
 	email = roethe.aaron@outlook.com
@@ -8,25 +11,25 @@
     defaultBranch = master
 
 [fetch]
-	prune = true
+    prune = true
 
 [alias]
-	pu = "!git push origin $(git symbolic-ref --short HEAD) -u"
+    pu = "!git push origin $(git symbolic-ref --short HEAD) -u"
 
-	log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
-	
-	gbDa = "!git fetch -p --no-recurse-submodules && for branch in $(git branch -vv | awk '/: gone]/{print $1}'); do git branch -D $branch; done"
+    log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
 
-	nuke = "git reset --hard origin/master"
+    gbDa = "!git fetch -p --no-recurse-submodules && for branch in $(git branch -vv | awk '/: gone]/{print $1}'); do git branch -D $branch; done"
+
+    nuke = "!branch=$(git show-ref --quiet refs/heads/master && echo master || echo main) && git reset --hard origin/$branch"
 
 [commit]
-	gpgsign = true
+    gpgsign = true
 
 [gpg]
-	program = /opt/homebrew/bin/gpg
+    program = /opt/homebrew/bin/gpg
 
 [pull]
-	rebase = false
+    rebase = false
 
 [submodule]
 	recurse = true
