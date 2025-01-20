@@ -1,9 +1,12 @@
 # Setup
-`git clone --bare git@github.com:AaronRoethe/dotfiles.git $HOME/.cfg`
 
-or clone from a local friend:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/AaronRoethe/dotfiles/master/mac_bootstrap/remote_setup.sh)"
+```
 
-`git clone --bare username@<target-ip>:~/.cfg $HOME/.cfg`
+```bash
+git clone --bare git@github.com:AaronRoethe/dotfiles.git $HOME/.cfg
+```
 
 ---
 
