@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Check if Homebrew is installed, and install if necessary
 if ! command -v brew &> /dev/null; then
@@ -33,7 +33,9 @@ if ! grep -q "alias config" ~/.zshrc; then
   echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> ~/.zshrc
 fi
 
+# Source .zshrc to apply the alias in the current session
 source ~/.zshrc
+
 # Set Git to not show untracked files for the dotfiles
 config config --local status.showUntrackedFiles no
 
