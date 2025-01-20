@@ -20,13 +20,19 @@ else
   echo "Git is already installed."
 fi
 
-# Clone dotfiles repository as a bare repo
-git clone --bare https://github.com/AaronRoethe/dotfiles.git $HOME/.cfg
+# Clone dotfiles repository as a bare repo if it doesn't already exist
+if [ ! -d "$HOME/.cfg" ]; then
+  echo "Cloning dotfiles repository..."
+  git clone --bare https://github.com/AaronRoethe/dotfiles.git $HOME/.cfg
+else
+  echo "The dotfiles repository already exists."
+fi
 
-# Create an alias for managing dotfiles
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+# Create and persist the config alias for managing dotfiles
+echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> ~/.bashrc
+source ~/.bashrc
 
 # Set Git to not show untracked files for the dotfiles
 config config --local status.showUntrackedFiles no
 
-echo "Dotfiles repository cloned and setup."
+echo "Dotfiles repository cloned and alias set up."
