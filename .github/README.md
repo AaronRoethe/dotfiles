@@ -5,7 +5,7 @@
 ```
 
 ```bash
-git clone --bare git@github.com:AaronRoethe/dotfiles.git $HOME/.cfg
+git clone --bare https://github.com/AaronRoethe/dotfiles.git $HOME/.cfg
 ```
 
 ---
