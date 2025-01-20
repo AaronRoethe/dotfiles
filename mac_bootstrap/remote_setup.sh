@@ -24,3 +24,9 @@ fi
 
 # Print success message
 echo "Git is installed. You can now clone your dotfile repository."
+
+git clone --bare https://github.com/AaronRoethe/dotfiles.git $HOME/.cfg
+
+alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+
+config config --local status.showUntrackedFiles no
