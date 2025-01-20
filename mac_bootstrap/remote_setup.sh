@@ -29,9 +29,11 @@ else
 fi
 
 # Create and persist the config alias for managing dotfiles
-echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> ~/.bashrc
-source ~/.bashrc
+if ! grep -q "alias config" ~/.zshrc; then
+  echo "alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'" >> ~/.zshrc
+fi
 
+source ~/.zshrc
 # Set Git to not show untracked files for the dotfiles
 config config --local status.showUntrackedFiles no
 
