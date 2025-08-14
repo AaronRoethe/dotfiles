@@ -101,6 +101,99 @@ check_prerequisites() {
     log_success "Prerequisites check passed"
 }
 
+install_xcode_command_line_tools() {
+    log_info "Checking Xcode Command Line Tools..."
+    
+    if xcode-select -p &> /dev/null; then
+        log_info "Xcode Command Line Tools already installed"
+        return 0
+    fi
+    
+    log_info "Installing Xcode Command Line Tools..."
+    log_info "This is required before installing Homebrew and other development tools"
+    
+    # Install command line tools
+    if xcode-select --install 2>/dev/null; then
+        log_info "Xcode Command Line Tools installation dialog opened"
+        log_info "Please follow the prompts in the dialog to accept and install"
+        echo
+        log_warning "⚠️  IMPORTANT: Click 'Install' in the dialog that appeared"
+        log_warning "    This download is typically 300-500 MB and may take 5-30 minutes"
+        log_warning "    depending on your internet connection speed"
+        echo
+        
+        # Wait for installation to complete with progress indication
+        log_info "Waiting for installation to complete..."
+        local wait_time=0
+        local dot_count=0
+        
+        while ! xcode-select -p &> /dev/null; do
+            # Show progress dots
+            if [ $((dot_count % 4)) -eq 0 ]; then
+                printf "\r${BLUE}[INFO]${NC} Still waiting"
+            elif [ $((dot_count % 4)) -eq 1 ]; then
+                printf "\r${BLUE}[INFO]${NC} Still waiting."
+            elif [ $((dot_count % 4)) -eq 2 ]; then
+                printf "\r${BLUE}[INFO]${NC} Still waiting.."
+            else
+                printf "\r${BLUE}[INFO]${NC} Still waiting..."
+            fi
+            
+            sleep 5
+            wait_time=$((wait_time + 5))
+            dot_count=$((dot_count + 1))
+            
+            # Show time elapsed every minute
+            if [ $((wait_time % 60)) -eq 0 ]; then
+                printf "\r${BLUE}[INFO]${NC} Still waiting... (${wait_time}s elapsed)                    \n"
+                log_info "Installation is still in progress. This is normal for large downloads."
+                
+                # If it's been a while, provide helpful info
+                if [ $wait_time -ge 300 ]; then  # 5 minutes
+                    log_info "💡 Tip: Check Activity Monitor for 'Install Command Line Developer Tools' process"
+                fi
+                
+                if [ $wait_time -ge 600 ]; then  # 10 minutes
+                    log_warning "Installation is taking longer than expected."
+                    log_info "You can check your internet connection or try canceling and retrying."
+                fi
+            fi
+        done
+        
+        # Clear the progress line and show success
+        printf "\r                                                                    \r"
+        log_success "Xcode Command Line Tools installed successfully!"
+        log_info "Total installation time: ${wait_time} seconds"
+        
+    else
+        # Check if tools are being installed by another process
+        if pgrep -f "Install Command Line Developer Tools" > /dev/null; then
+            log_info "Xcode Command Line Tools installation already in progress"
+            log_info "Waiting for existing installation to complete..."
+            
+            local wait_time=0
+            while ! xcode-select -p &> /dev/null && pgrep -f "Install Command Line Developer Tools" > /dev/null; do
+                printf "\r${BLUE}[INFO]${NC} Installation in progress... (${wait_time}s)"
+                sleep 5
+                wait_time=$((wait_time + 5))
+            done
+            printf "\r                                                    \r"
+            
+            if xcode-select -p &> /dev/null; then
+                log_success "Xcode Command Line Tools installation completed!"
+            else
+                log_error "Xcode Command Line Tools installation appears to have failed"
+                return 1
+            fi
+        else
+            log_warning "Xcode Command Line Tools installation dialog may not have opened"
+            log_info "You can try running 'xcode-select --install' manually"
+            log_info "Or install via App Store -> Developer Tools"
+            return 1
+        fi
+    fi
+}
+
 install_homebrew() {
     if command_exists brew; then
         log_info "Homebrew is already installed ($(brew --version | head -n1))"
@@ -228,6 +321,7 @@ print_completion_message() {
     log_success "Bootstrap setup completed successfully!"
     echo
     log_info "What was installed/configured:"
+    echo "  ✓ Xcode Command Line Tools"
     echo "  ✓ Homebrew package manager"
     echo "  ✓ Oh My Zsh shell framework"
     echo "  ✓ Development tools and applications"
@@ -252,6 +346,7 @@ main() {
     log_info "Script directory: $SCRIPT_DIR"
     
     check_prerequisites
+    install_xcode_command_line_tools
     install_homebrew
     install_oh_my_zsh
     setup_go_directory

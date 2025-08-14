@@ -495,7 +495,6 @@ print_installation_summary() {
     echo "  ✓ Python versions: ${#pythonVersions[@]} items"
     echo "  ✓ Node.js versions: ${#nodeVersions[@]} items"
     echo "  ✓ Global npm packages: ${#npmPackages[@]} items"
-    echo "  ✓ Xcode Command Line Tools"
     echo "  ✓ .NET SDK (download initiated)"
     echo
     log_info "Next steps:"
@@ -515,7 +514,6 @@ main() {
     install_homebrew_taps
     install_homebrew_packages
     install_homebrew_casks
-    install_xcode_command_line_tools
     install_python_versions
     install_node_versions
     install_npm_packages
