@@ -1,0 +1,213 @@
+name: Validate Commit Convention
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
+
+jobs:
+  validate-commits:
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit messages
+        id: validate-commits
+        run: |
+          set -eux
+          
+          # Get the base and head commits
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          HEAD_SHA="${{ github.event.pull_request.head.sha }}"
+          
+          echo "🔍 Validating commits between $BASE_SHA and $HEAD_SHA"
+          
+          # Get all commit messages in the PR
+          COMMITS=$(git log --pretty=format:"%H|%s|%b" ${BASE_SHA}..${HEAD_SHA})
+          
+          if [ -z "$COMMITS" ]; then
+            echo "⚠️  No commits found in PR"
+            echo "valid=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          INVALID_COMMITS=()
+          COMMIT_COUNT=0
+          
+          # Process each commit
+          while IFS= read -r commit_line; do
+            COMMIT_COUNT=$((COMMIT_COUNT + 1))
+            SHA=$(echo "$commit_line" | cut -d'|' -f1)
+            SUBJECT=$(echo "$commit_line" | cut -d'|' -f2)
+            BODY=$(echo "$commit_line" | cut -d'|' -f3-)
+            
+            echo ""
+            echo "📝 Checking commit: ${SHA:0:7} - $SUBJECT"
+            
+            # Check if commit message follows conventional commit format
+            # Format: type(scope): description
+            # Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+            # Optional: ! for breaking change, (scope) for scope
+            
+            VALID=false
+            
+            # Pattern 1: type(scope)!: description (breaking change with scope)
+            if echo "$SUBJECT" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?!:\s+.+'; then
+              VALID=true
+              echo "  ✅ Breaking change with optional scope"
+            # Pattern 2: type(scope): description (standard with scope)
+            elif echo "$SUBJECT" | grep -qE '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?:\s+.+'; then
+              VALID=true
+              echo "  ✅ Valid conventional commit"
+            # Pattern 3: Merge commits are allowed
+            elif echo "$SUBJECT" | grep -qiE '^(merge|pull|revert)'; then
+              VALID=true
+              echo "  ✅ Merge/revert commit (allowed)"
+            fi
+            
+            # Check for BREAKING CHANGE in body (also valid)
+            if echo "$BODY" | grep -qiE 'BREAKING CHANGE:'; then
+              if [ "$VALID" = "false" ]; then
+                # If subject doesn't follow format but has BREAKING CHANGE, still validate
+                # but suggest proper format
+                echo "  ⚠️  BREAKING CHANGE found in body, but subject should follow format: type!: description"
+              fi
+            fi
+            
+            if [ "$VALID" = "false" ]; then
+              INVALID_COMMITS+=("${SHA:0:7}: $SUBJECT")
+              echo "  ❌ Invalid commit message format"
+              echo "     Expected format: type(scope): description"
+              echo "     Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+              echo "     Example: feat: add user authentication"
+              echo "     Example: fix(api): resolve validation error"
+              echo "     Example: feat!: remove deprecated endpoint (breaking change)"
+            fi
+          done <<< "$COMMITS"
+          
+          echo ""
+          echo "📊 Summary: $COMMIT_COUNT commit(s) checked"
+          
+          if [ ${#INVALID_COMMITS[@]} -gt 0 ]; then
+            echo "❌ Found ${#INVALID_COMMITS[@]} invalid commit(s):"
+            for invalid in "${INVALID_COMMITS[@]}"; do
+              echo "   - $invalid"
+            done
+            echo "valid=false" >> $GITHUB_OUTPUT
+            echo "invalid_count=${#INVALID_COMMITS[@]}" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "✅ All commits follow conventional commit format"
+            echo "valid=true" >> $GITHUB_OUTPUT
+            echo "invalid_count=0" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check existing comment
+        id: check-comment
+        if: steps.validate-commits.outputs.valid == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.payload.pull_request.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo,
+              issue_number,
+            });
+
+            const commitValidationComment = comments.find(comment =>
+              comment.body.includes('❌ Invalid commit message format') &&
+              comment.user.type === 'Bot'
+            );
+
+            if (commitValidationComment) {
+              core.exportVariable('COMMENT_ID', commitValidationComment.id);
+            }
+
+      - name: Create or update comment
+        if: steps.validate-commits.outputs.valid == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.payload.pull_request.number;
+            const invalidCount = '${{ steps.validate-commits.outputs.invalid_count }}';
+            
+            const commentBody = `## ❌ Commit Message Validation Failed
+
+Found **${invalidCount}** commit(s) that don't follow the [Conventional Commits](https://www.conventionalcommits.org/) format.
+
+### Required Format
+\`\`\`
+type(scope): description
+\`\`\`
+
+### Valid Types
+- \`feat\`: A new feature
+- \`fix\`: A bug fix
+- \`docs\`: Documentation only changes
+- \`style\`: Code style changes (formatting, missing semi colons, etc.)
+- \`refactor\`: Code refactoring
+- \`perf\`: Performance improvements
+- \`test\`: Adding or updating tests
+- \`build\`: Build system or dependency changes
+- \`ci\`: CI/CD changes
+- \`chore\`: Other changes that don't modify src or test files
+- \`revert\`: Reverts a previous commit
+
+### Examples
+- \`feat: add user authentication\`
+- \`fix(api): resolve validation error\`
+- \`feat(auth)!: remove deprecated login method\` (breaking change)
+- \`docs: update API documentation\`
+
+### Breaking Changes
+For breaking changes, add \`!\` after the type/scope:
+- \`feat!: remove deprecated API\`
+- Or include \`BREAKING CHANGE:\` in the commit body
+
+Please update your commit messages to follow this format. You can use \`git commit --amend\` or \`git rebase -i\` to update commit messages.`;
+
+            const commentId = process.env.COMMENT_ID;
+            
+            if (commentId) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: Number(commentId),
+                body: commentBody,
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number,
+                body: commentBody,
+              });
+            }
+
+      - name: Remove comment if valid
+        if: steps.validate-commits.outputs.valid == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const issue_number = context.payload.pull_request.number;
+            const { data: comments } = await github.rest.issues.listComments({
+              ...context.repo,
+              issue_number,
+            });
+
+            const commitValidationComment = comments.find(comment =>
+              comment.body.includes('❌ Invalid commit message format') &&
+              comment.user.type === 'Bot'
+            );
+
+            if (commitValidationComment) {
+              await github.rest.issues.deleteComment({
+                ...context.repo,
+                comment_id: commitValidationComment.id,
+              });
+            }
