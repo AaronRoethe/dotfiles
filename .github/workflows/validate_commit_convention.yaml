@@ -136,40 +136,34 @@ jobs:
             const issue_number = context.payload.pull_request.number;
             const invalidCount = '${{ steps.validate-commits.outputs.invalid_count }}';
             
-            const commentBody = `## ❌ Commit Message Validation Failed
-
-Found **${invalidCount}** commit(s) that don't follow the [Conventional Commits](https://www.conventionalcommits.org/) format.
-
-### Required Format
-\`\`\`
-type(scope): description
-\`\`\`
-
-### Valid Types
-- \`feat\`: A new feature
-- \`fix\`: A bug fix
-- \`docs\`: Documentation only changes
-- \`style\`: Code style changes (formatting, missing semi colons, etc.)
-- \`refactor\`: Code refactoring
-- \`perf\`: Performance improvements
-- \`test\`: Adding or updating tests
-- \`build\`: Build system or dependency changes
-- \`ci\`: CI/CD changes
-- \`chore\`: Other changes that don't modify src or test files
-- \`revert\`: Reverts a previous commit
-
-### Examples
-- \`feat: add user authentication\`
-- \`fix(api): resolve validation error\`
-- \`feat(auth)!: remove deprecated login method\` (breaking change)
-- \`docs: update API documentation\`
-
-### Breaking Changes
-For breaking changes, add \`!\` after the type/scope:
-- \`feat!: remove deprecated API\`
-- Or include \`BREAKING CHANGE:\` in the commit body
-
-Please update your commit messages to follow this format. You can use \`git commit --amend\` or \`git rebase -i\` to update commit messages.`;
+            const commentBody = '## ❌ Commit Message Validation Failed\n\n' +
+              'Found **' + invalidCount + '** commit(s) that don\'t follow the [Conventional Commits](https://www.conventionalcommits.org/) format.\n\n' +
+              '### Required Format\n' +
+              '```\n' +
+              'type(scope): description\n' +
+              '```\n\n' +
+              '### Valid Types\n' +
+              '- `feat`: A new feature\n' +
+              '- `fix`: A bug fix\n' +
+              '- `docs`: Documentation only changes\n' +
+              '- `style`: Code style changes (formatting, missing semi colons, etc.)\n' +
+              '- `refactor`: Code refactoring\n' +
+              '- `perf`: Performance improvements\n' +
+              '- `test`: Adding or updating tests\n' +
+              '- `build`: Build system or dependency changes\n' +
+              '- `ci`: CI/CD changes\n' +
+              '- `chore`: Other changes that don\'t modify src or test files\n' +
+              '- `revert`: Reverts a previous commit\n\n' +
+              '### Examples\n' +
+              '- `feat: add user authentication`\n' +
+              '- `fix(api): resolve validation error`\n' +
+              '- `feat(auth)!: remove deprecated login method` (breaking change)\n' +
+              '- `docs: update API documentation`\n\n' +
+              '### Breaking Changes\n' +
+              'For breaking changes, add `!` after the type/scope:\n' +
+              '- `feat!: remove deprecated API`\n' +
+              '- Or include `BREAKING CHANGE:` in the commit body\n\n' +
+              'Please update your commit messages to follow this format. You can use `git commit --amend` or `git rebase -i` to update commit messages.';
 
             const commentId = process.env.COMMENT_ID;
             
