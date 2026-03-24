@@ -1,11 +1,6 @@
-# update this file with the following command:
-# config add -p ../.gitconfig
-
 [user]
-	name = Aaron Roethe
-	email = roethe.aaron@outlook.com
-	signingkey = 
-	# gpg --list-secret-keys --keyid-format=long
+    name = Aaron Roethe
+    email = aroethe@axon.com
 
 [init]
     defaultBranch = master
@@ -13,23 +8,45 @@
 [fetch]
     prune = true
 
-[alias]
-    pu = "!git push origin $(git symbolic-ref --short HEAD) -u"
-
-    log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
-
-    gbDa = "!git fetch -p --no-recurse-submodules && for branch in $(git branch -vv | awk '/: gone]/{print $1}'); do git branch -D $branch; done"
-
-    nuke = "!branch=$(git show-ref --quiet refs/heads/master && echo master || echo main) && git reset --hard origin/$branch"
-
-[commit]
-    gpgsign = true
-
-[gpg]
-    program = /opt/homebrew/bin/gpg
+[push]
+    autoSetupRemote = true
 
 [pull]
-    rebase = false
+    ff = only
+
+[alias]
+    # pretty graph log (overrides default)
+    log = "log --graph --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(12,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
+
+    # pretty graph log, local branches only, wider author column
+    lg = "log --graph --decorate-refs='refs/heads/*' --pretty='%Cred%h%Creset %Cgreen(%ad) %C(bold blue)%<(16,trunc)<%an> %C(auto)%d%Creset%<(80,trunc)%s' --date=short"
+
+    # delete local branches whose remote tracking is gone
+    gone = "!git fetch -p --no-recurse-submodules && for branch in $(git branch -vv | awk '/: gone]/{print $1}'); do git branch -D $branch; done"
+
+    # reset hard to origin main/master
+    nuke = "!branch=$(git show-ref --quiet refs/heads/master && echo master || echo main) && git reset --hard origin/$branch"
+
+    # delete all local branches except main/master
+    wipe = !sh -c \"git branch | grep -v -E \\\"^\\\\*|main|master\\\" | sed \\\"s/^[[:space:]]*//\\\" | xargs -r git branch -D\"
+
+    # stash, switch to main, pull, pop
+    home = "!git stash -q && git checkout $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') -q && git pull -q && git stash pop"
+
+    # merge current branch into develop and push
+    to-develop = "!f() { b=$(git rev-parse --abbrev-ref HEAD) && git checkout develop && git pull && git merge --no-edit $b && git push origin develop && git checkout -; }; f"
+
+    # push branch and open PR against main
+    pr = "!git push -q && gh pr create -B $(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@') -H $(git symbolic-ref --short HEAD)"
 
 [submodule]
     recurse = true
+
+[url "git@git.taservs.net:"]
+	insteadOf = https://git.taservs.net/
+
+[url "git@github-personal:AaronRoethe/"]
+	insteadOf = https://github.com/AaronRoethe/
+
+[url "git@github.com:axon-productivity/"]
+	insteadOf = https://github.com/axon-productivity/

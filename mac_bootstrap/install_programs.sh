@@ -91,13 +91,10 @@ declare -a brew=(
     "pyenv"
     "mysql"
     "yarn"
-    "n"
     "commitizen"
     "jq"
     "coreutils"
     "go"
-    "zsh-autosuggestions"
-    "zsh-syntax-highlighting"
     "wget"
     "nmap"
     "grep"
@@ -122,12 +119,12 @@ declare -a brewCask=(
 )
 
 declare -a pythonVersions=(
-    "3.10.0"
-    "3.10.5"
+    "3.12.9"
+    "3.13.2"
 )
 
 declare -a nodeVersions=(
-    "16.18.0"
+    "22"
 )
 
 declare -a npmPackages=(
@@ -392,30 +389,41 @@ install_node_versions() {
         log_info "No Node.js versions specified for installation"
         return 0
     fi
-    
-    if ! command_exists n; then
-        log_error "n (Node.js version manager) is not installed. Cannot install Node.js versions."
+
+    # Install NVM if not present
+    if [ ! -d "$HOME/.nvm" ]; then
+        log_info "Installing NVM..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+    fi
+
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+    if ! command_exists nvm; then
+        log_error "NVM is not available. Cannot install Node.js versions."
         return 1
     fi
-    
-    log_info "Installing Node.js versions via n..."
-    
+
+    log_info "Installing Node.js versions via nvm..."
+
     local failed_versions=()
-    
+
     for version in "${nodeVersions[@]}"; do
         log_info "Installing Node.js $version..."
-        if sudo n "$version"; then
+        if nvm install "$version"; then
             log_success "Successfully installed Node.js $version"
         else
             log_error "Failed to install Node.js $version"
             failed_versions+=("$version")
         fi
     done
-    
+
+    nvm use "${nodeVersions[0]}" && nvm alias default "${nodeVersions[0]}"
+
     if [ ${#failed_versions[@]} -gt 0 ]; then
         log_warning "The following Node.js versions failed to install: ${failed_versions[*]}"
     fi
-    
+
     log_success "Node.js versions installation completed"
 }
 
