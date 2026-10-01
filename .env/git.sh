@@ -3,97 +3,31 @@ alias gsp="git stash pop"
 
 prMsg () {
     echo "================== Last Pull Request > clipboard =================="
-    gh pr list --state open --author aroethe --json additions,deletions,title,url,headRepository --limit 10 --template \
+    gh pr list --state open --author @me --json additions,deletions,title,url,headRepository --limit 10 --template \
         '{{range .}}*[{{.headRepository.name}}]* `+{{.additions}} -{{.deletions}}` {{.title}}{{"\n"}}{{.url}}{{"\n"}}{{end}}' | tee >(pbcopy)
     echo "==================================================================="
 }
 
-git_nuke() {
-    # Check if we're in a git repository
-    if ! git rev-parse --git-dir > /dev/null 2>&1; then
-        echo "Error: Not in a git repository" >&2
-        return 1
-    fi
+# Delete the current repo directory and clone it fresh from its remote
+git_reclone() {
+    local root url
+    root=$(git rev-parse --show-toplevel 2>/dev/null) || { echo "not a git repo" >&2; return 1; }
+    url=$(git remote get-url origin 2>/dev/null || git remote get-url "$(git remote | head -n 1)") || { echo "no remote" >&2; return 1; }
 
-    # Get the repository root directory
-    local repo_root
-    repo_root=$(git rev-parse --show-toplevel)
-    
-    if [ -z "$repo_root" ]; then
-        echo "Error: Could not determine repository root" >&2
-        return 1
-    fi
+    echo "Repository: $root"
+    echo "Remote URL: $url"
+    echo "WARNING: deletes the directory and re-clones. Uncommitted changes will be lost."
+    read "confirm?Type 'yes' to continue: "
+    [[ "$confirm" == "yes" ]] || { echo "Aborted."; return 1; }
 
-    # Get the remote URL (prefer origin, fallback to first remote)
-    local remote_url
-    if git remote get-url origin > /dev/null 2>&1; then
-        remote_url=$(git remote get-url origin)
-    else
-        local first_remote
-        first_remote=$(git remote | head -n 1)
-        if [ -z "$first_remote" ]; then
-            echo "Error: No git remotes found" >&2
-            return 1
-        fi
-        remote_url=$(git remote get-url "$first_remote")
-    fi
+    cd "$(dirname "$root")" && rm -rf "$root" && git clone "$url" "$root" && cd "$root"
+}
 
-    if [ -z "$remote_url" ]; then
-        echo "Error: Could not determine remote URL" >&2
-        return 1
-    fi
-
-    # Get the directory name
-    local dir_name
-    dir_name=$(basename "$repo_root")
-    
-    # Get the parent directory
-    local parent_dir
-    parent_dir=$(dirname "$repo_root")
-
-    # Confirm action
-    echo "Repository: $repo_root"
-    echo "Remote URL: $remote_url"
-    echo "Directory: $dir_name"
-    echo "Parent: $parent_dir"
-    echo ""
-    echo "WARNING: This will DELETE the entire repository directory and re-clone it."
-    echo "All uncommitted changes will be lost!"
-    echo ""
-    echo -n "Are you sure you want to continue? (yes/no): "
-    read confirm
-
-    if [ "$confirm" != "yes" ]; then
-        echo "Aborted."
-        return 1
-    fi
-
-    # Navigate to parent directory
-    cd "$parent_dir" || {
-        echo "Error: Could not navigate to parent directory: $parent_dir" >&2
-        return 1
-    }
-
-    # Remove the repository directory
-    echo "Removing repository directory..."
-    rm -rf "$dir_name" || {
-        echo "Error: Could not remove repository directory" >&2
-        return 1
-    }
-
-    # Clone the repository back
-    echo "Cloning repository..."
-    git clone "$remote_url" "$dir_name" || {
-        echo "Error: Could not clone repository" >&2
-        return 1
-    }
-
-    # Navigate into the cloned repository
-    cd "$dir_name" || {
-        echo "Error: Could not navigate into cloned repository" >&2
-        return 1
-    }
-
-    echo "Done! Repository has been nuked and re-cloned."
-    echo "Current directory: $(pwd)"
+# Repack refs and drop empty remote ref dirs, then pull
+git-pullfix() {
+    local gitdir
+    gitdir=$(git rev-parse --git-dir 2>/dev/null) || { echo "not a git repo" >&2; return 1; }
+    git pack-refs --all --prune &&
+    find "$gitdir/refs/remotes" -type d -empty -delete 2>/dev/null
+    git pull
 }

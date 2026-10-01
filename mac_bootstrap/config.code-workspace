@@ -4,19 +4,7 @@
 			"path": "../mac_bootstrap"
 		},
 		{
-			"path": "../.ssh"
-		},
-		{
-			"path": "../"
-		},
-		{
 			"path": "../.env"
-		},
-		{
-			"path": "../.cfg"
-		},
-		{
-			"path": "../repos/utils"
 		}
 	],
 	"settings": {}
