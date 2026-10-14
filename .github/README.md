@@ -13,7 +13,7 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 brew install git
 
 # 2. The dotfiles, over SSH
-git clone --bare git@github.com:axon-productivity/<repo>.git ~/.cfg
+git clone --bare git@github.com:AaronRoethe/dotfiles.git ~/.cfg
 zsh <(git --git-dir="$HOME/.cfg" show HEAD:mac_bootstrap/remote_setup.sh)
 ```
 
