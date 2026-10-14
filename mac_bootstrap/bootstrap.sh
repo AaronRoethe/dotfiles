@@ -16,6 +16,7 @@ if [[ ! -f "$HOME/.gitconfig.local" ]]; then
 # Local-only: personal identity, generated from ~/.env/profile.sh by mac_bootstrap/bootstrap.sh.
 [user]
     name = $PROFILE_NAME
+    email = $PROFILE_WORK_EMAIL
 
 [url "git@github-personal:$PROFILE_GH_USER/"]
 	insteadOf = https://github.com/$PROFILE_GH_USER/
@@ -25,10 +26,14 @@ fi
 if ! command -v brew &>/dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
-eval "$(/opt/homebrew/bin/brew shellenv)"
+# /opt/homebrew on Apple Silicon; the Linux path is only used by the Docker test (mac_bootstrap/test).
+for brew_bin in /opt/homebrew/bin/brew /home/linuxbrew/.linuxbrew/bin/brew; do
+    [[ -x "$brew_bin" ]] && eval "$("$brew_bin" shellenv)" && break
+done
 
-brew bundle --file=Brewfile
-[[ -f Brewfile.work ]] && brew bundle --file=Brewfile.work
+# BREWFILE lets the Docker test swap in a one-formula Brewfile.
+brew bundle --file="${BREWFILE:-Brewfile}"
+[[ -z "${BREWFILE:-}" && -f Brewfile.work ]] && brew bundle --file=Brewfile.work
 
 pyenv install --skip-existing 3.13
 [[ "$(pyenv global)" == system ]] && pyenv global "$(pyenv latest 3.13)"

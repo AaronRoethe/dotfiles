@@ -1,0 +1,7 @@
+#!/bin/sh
+# Stub: skip compiling Python; just record the calls bootstrap.sh makes.
+echo "pyenv $*" >> "$HOME/stub.log"
+case "$1" in
+    global) [ -n "$2" ] || echo system ;;
+    latest) echo "$2.0" ;;
+esac

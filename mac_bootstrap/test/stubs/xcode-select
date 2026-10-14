@@ -1,0 +1,4 @@
+#!/bin/sh
+# Stub: pretend the Xcode Command Line Tools are installed.
+echo "xcode-select $*" >> "$HOME/stub.log"
+echo /Library/Developer/CommandLineTools

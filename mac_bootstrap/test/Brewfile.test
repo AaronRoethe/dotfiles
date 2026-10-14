@@ -1,0 +1,2 @@
+# One small formula, so the Docker test exercises a real `brew bundle` without installing everything.
+brew "hello"

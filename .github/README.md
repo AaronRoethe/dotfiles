@@ -58,6 +58,7 @@ mac_bootstrap/
   Brewfile                  packages and apps
   config-rectangle.json     Rectangle config (import manually in Rectangle > Settings)
   config.code-workspace     VS Code workspace for mac_bootstrap/ and .env/
+  test/                     Docker test of the new-user setup (see Testing)
 ```
 
 ## Local-only files
@@ -78,6 +79,23 @@ These are loaded if present but never committed (listed in the tracked `~/.gitig
 Global Claude Code config in `~/.claude` is tracked here: `CLAUDE.md`, settings and hooks, agents, skills, and reference files. Claude Code writes a lot of other state into `~/.claude` (sessions, memory, plugin code), so `~/.claude/.gitignore` whitelists only those files. Personal values come from the profile. Most of it is work-specific, which is why this repo must stay private.
 
 The setup above restores it. Plugins reinstall from the marketplaces in `settings.json`, and MCP tokens are added by hand. `~/.claude/README.md` covers the details, the hooks, and how to manage it.
+
+## Testing the new-user setup
+
+`mac_bootstrap/test/` simulates a new user's first setup in a clean Docker container (Debian, non-root user) and checks the result:
+
+```bash
+zsh ~/mac_bootstrap/test/run.sh
+```
+
+It tests the dotfiles as they'd be cloned: the committed `HEAD` plus any tracked or staged changes. Untracked files aren't included, so `config add` new files first. The steps follow this README:
+
+1. Download `remote_setup.sh` and run it without, then with, `DOTFILES_REPO`. Checks the clone, the checkout, and that the first run creates the profile and stops.
+2. Fill in a test profile and re-run `bootstrap.sh`. Checks the Homebrew install, a real `brew bundle` of one formula (`test/Brewfile.test`), the runtime steps, and that it's safe to re-run.
+3. Checks the git identity, `.zshrc` loading the profile, local-only files being ignored, and a clean `config status`. Also checks that none of **your** profile values appear in any tracked file.
+4. Checks that the Claude Code config loads the profile, and that the hooks work for the new user: Slack own-DM vs other channels, `sudo`, force-push, the gitleaks commit block, and the push identity check.
+
+macOS-only or slow steps are stubbed and logged to `~/stub.log` in the container: `xcode-select`, `pyenv` (no Python compile) and `nvm` (no Node download). Homebrew itself is installed for real, at its Linux prefix, so a run takes a few minutes.
 
 ## Managing
 
