@@ -16,13 +16,14 @@ owner_leaks() { [[ -n ${OWNER_VALUES:-} ]] && grep -lF -f <(print -r -- "$OWNER_
 # Stub for nvm (its real install downloads Node). bootstrap.sh skips the nvm installer when ~/.nvm exists.
 mkdir -p ~/.nvm && print 'nvm() { echo "nvm $*" >> "$HOME/stub.log"; }' > ~/.nvm/nvm.sh
 
-step "1. Download remote_setup.sh and run it (README: Setup)"
-mkdir -p ~/Downloads
-git --git-dir=/dotfiles.git show HEAD:mac_bootstrap/remote_setup.sh > ~/Downloads/remote_setup.sh
-out=$(env -u DOTFILES_REPO zsh ~/Downloads/remote_setup.sh 2>&1)
-[[ $out == *"Set DOTFILES_REPO"* ]] && ok "remote_setup.sh refuses to run without DOTFILES_REPO" || bad "remote_setup.sh without DOTFILES_REPO" "$out"
-out=$(DOTFILES_REPO=file:///dotfiles.git zsh ~/Downloads/remote_setup.sh 2>&1); rc=$?
+step "1. Clone the bare repo and run remote_setup.sh from it (README: Setup)"
+out=$(env -u DOTFILES_REPO zsh <(git --git-dir=/dotfiles.git show HEAD:mac_bootstrap/remote_setup.sh) 2>&1)
+[[ $out == *"~/.cfg not found"* && ! -d ~/.cfg ]] && ok "remote_setup.sh without ~/.cfg or DOTFILES_REPO stops with a hint" || bad "remote_setup.sh without ~/.cfg or DOTFILES_REPO" "$out"
+# README step 1 clones over SSH; the container has no SSH, so a local file:// clone stands in for it.
+out=$(git clone --bare file:///dotfiles.git ~/.cfg 2>&1)
 [[ -d ~/.cfg ]] && ok "bare repo cloned to ~/.cfg" || bad "bare repo cloned to ~/.cfg" "$out"
+# README step 2, verbatim
+out=$(zsh <(git --git-dir="$HOME/.cfg" show HEAD:mac_bootstrap/remote_setup.sh) 2>&1); rc=$?
 [[ -f ~/.zshrc && -f ~/.claude/CLAUDE.md && -f ~/mac_bootstrap/bootstrap.sh ]] && ok "dotfiles checked out into \$HOME" || bad "dotfiles checked out into \$HOME" "$out"
 [[ $rc -ne 0 && $out == *"Created ~/.env/profile.sh"* ]] && ok "first run creates the profile and stops" || bad "first run creates the profile and stops (rc=$rc)" "$out"
 check "profile.sh is a copy of the template" cmp ~/.env/profile.sh ~/.env/profile.sh.example
