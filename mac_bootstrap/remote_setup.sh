@@ -12,7 +12,7 @@ if ! xcode-select -p &>/dev/null; then
     until xcode-select -p &>/dev/null; do sleep 10; done
 fi
 
-config() { /usr/bin/git --git-dir="$HOME/.cfg" --work-tree="$HOME" "$@"; }
+config() { git --git-dir="$HOME/.cfg" --work-tree="$HOME" "$@"; }
 
 if [[ ! -d "$HOME/.cfg" ]]; then
     : "${DOTFILES_REPO:?~/.cfg not found. Clone it first (see README), or set DOTFILES_REPO to the clone URL}"

@@ -1,4 +1,4 @@
-alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias zshrc="code ~/mac_bootstrap/config.code-workspace"
 alias c="code ."
 alias rf="clear && source $HOME/.zshrc"

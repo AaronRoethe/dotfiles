@@ -7,13 +7,17 @@ macOS dotfiles managed as a bare git repo in `~/.cfg`, with `$HOME` as the work 
 You need access to this repo and an SSH key set up for `github.com`. Then:
 
 ```bash
+# 1. Homebrew (its installer also installs the Xcode Command Line Tools), then git from Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+brew install git
+
+# 2. The dotfiles, over SSH
 git clone --bare git@github.com:axon-productivity/<repo>.git ~/.cfg
 zsh <(git --git-dir="$HOME/.cfg" show HEAD:mac_bootstrap/remote_setup.sh)
 ```
 
-On a Mac without the Xcode Command Line Tools, the first `git` command prompts you to install them. Accept, then run it again.
-
-The second command runs `remote_setup.sh` straight from the clone, so there's nothing to download. It makes sure the Xcode CLI tools are installed, checks the dotfiles out into `$HOME`, and runs `mac_bootstrap/bootstrap.sh`. That script creates your profile (see below), then installs Homebrew, everything in [`mac_bootstrap/Brewfile`](../mac_bootstrap/Brewfile), Python (pyenv) and Node LTS (nvm). It's safe to re-run.
+The last command runs `remote_setup.sh` straight from the clone, so there's nothing to download. It checks the dotfiles out into `$HOME` and runs `mac_bootstrap/bootstrap.sh`. That script creates your profile (see below), then installs Homebrew, everything in [`mac_bootstrap/Brewfile`](../mac_bootstrap/Brewfile), Python (pyenv) and Node LTS (nvm). It's safe to re-run.
 
 ## Profile
 
@@ -90,7 +94,7 @@ zsh ~/mac_bootstrap/test/run.sh
 
 It tests committed `HEAD`, which is what a new user clones, so commit first. There's no need to push. It's read-only on your machine: `~/.cfg` is mounted read-only and everything else runs inside the throwaway container. The steps follow this README:
 
-1. Runs the two Setup commands. The container has no SSH, so a local clone stands in for the `git@github.com` one. Checks the clone, the checkout, and that the first run creates the profile and stops. Also checks that `remote_setup.sh` stops with a hint if `~/.cfg` is missing.
+1. Runs the Setup commands in order: the Homebrew installer, `brew install git` (checking that Homebrew's git is used), then the clone and `remote_setup.sh`. The container has no SSH, so a local clone stands in for the `git@github.com` one. Checks the clone, the checkout, and that the first run creates the profile and stops. Also checks that `remote_setup.sh` stops with a hint if `~/.cfg` is missing.
 2. Fill in a test profile and re-run `bootstrap.sh`. Checks the Homebrew install, a real `brew bundle` of one formula (`test/Brewfile.test`), the runtime steps, and that it's safe to re-run.
 3. Checks the git identity, `.zshrc` loading the profile, local-only files being ignored, and a clean `config status`. Also checks that none of **your** profile values appear in any tracked file.
 4. Checks that the Claude Code config loads the profile, and that the hooks work for the new user: Slack own-DM vs other channels, `sudo`, force-push, the gitleaks commit block, and the push identity check.
