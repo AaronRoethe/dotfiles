@@ -88,7 +88,7 @@ The setup above restores it. Plugins reinstall from the marketplaces in `setting
 zsh ~/mac_bootstrap/test/run.sh
 ```
 
-It tests the dotfiles as they'd be cloned: the committed `HEAD` plus any tracked or staged changes. Untracked files aren't included, so `config add` new files first. The steps follow this README:
+It tests committed `HEAD`, which is what a new user clones, so commit first. There's no need to push. It's read-only on your machine: `~/.cfg` is mounted read-only and everything else runs inside the throwaway container. The steps follow this README:
 
 1. Download `remote_setup.sh` and run it without, then with, `DOTFILES_REPO`. Checks the clone, the checkout, and that the first run creates the profile and stops.
 2. Fill in a test profile and re-run `bootstrap.sh`. Checks the Homebrew install, a real `brew bundle` of one formula (`test/Brewfile.test`), the runtime steps, and that it's safe to re-run.
