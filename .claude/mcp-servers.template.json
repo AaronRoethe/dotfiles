@@ -1,0 +1,42 @@
+{
+  "mcpServers": {
+    "jira": {
+      "type": "http",
+      "url": "https://app-mcp-jira-prod-j6a1bj7j.azurewebsites.net/mcp"
+    },
+    "glean": {
+      "type": "http",
+      "url": "https://axon-be.glean.com/mcp/cortex"
+    },
+    "slack": {
+      "type": "http",
+      "url": "https://app-mcp-slack-prod-j6a1bj7j.azurewebsites.net/mcp"
+    },
+    "splunk": {
+      "type": "sse",
+      "url": "http://localhost:8000/sse",
+      "headers": {
+        "Authorization": "<set-me>"
+      }
+    },
+    "rms-db": {
+      "type": "http",
+      "url": "http://localhost:8056/"
+    },
+    "devbridge": {
+      "type": "http",
+      "url": "https://devbridge-mcp.dems.va.main.ag1.axon.us",
+      "headers": {
+        "X-Zephyr-Token": "<set-me>",
+        "X-Jira-URL": "<set-me>",
+        "X-Jira-Email": "<set-me>",
+        "X-Jira-Token": "<set-me>",
+        "X-Quip-Token": "<set-me>"
+      }
+    },
+    "incident-io": {
+      "type": "http",
+      "url": "https://mcp.incident.io/mcp"
+    }
+  }
+}

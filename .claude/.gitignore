@@ -1,0 +1,16 @@
+# Whitelist: ignore everything Claude Code writes, then opt back in to hand-maintained config.
+/*
+!/.gitignore
+!/README.md
+!/CLAUDE.md
+!/settings.json
+!/mcp-servers.template.json
+!/agents/
+!/hooks/
+!/reference/
+!/skills/
+/skills/synced/
+/skills/.trash/
+
+# Not tracked on purpose: projects/*/memory (personal, path-keyed) and plugins/
+# (machine-specific paths; settings.json enabledPlugins + extraKnownMarketplaces reinstall them)

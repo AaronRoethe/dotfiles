@@ -1,0 +1,9 @@
+# Personal profile: copy to ~/.env/profile.sh and fill in. ~/.env/profile.sh is never committed.
+# Loaded by .zshrc (all ~/.env/*.sh), mac_bootstrap/bootstrap.sh, the Claude Code hooks,
+# and Claude Code itself (imported from ~/.claude/CLAUDE.md).
+export PROFILE_NAME="Your Name"
+export PROFILE_GH_USER=your-github-user         # personal GitHub account (dotfiles fork, git URL rewrite)
+export PROFILE_WORK_USER=your-work-username     # work username, also the git branch prefix
+export PROFILE_WORK_EMAIL=you@axon.com
+export PROFILE_SLACK_USER_ID=U00000000          # Slack profile > ⋮ > Copy member ID
+export PROFILE_JIRA_ACCOUNT_ID=000000000000000000000000   # Jira profile URL: /jira/people/<id>

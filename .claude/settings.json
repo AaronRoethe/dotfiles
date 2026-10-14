@@ -1,0 +1,175 @@
+{
+  "permissions": {
+    "allow": [
+      "Read",
+      "Grep",
+      "Glob",
+      "mcp__slack__get_conversation_history",
+      "mcp__slack__search_slack_messages",
+      "mcp__slack__check_direct_messages",
+      "mcp__slack__find_group_chat",
+      "mcp__slack__send_slack_message_draft",
+      "mcp__quip__read_document",
+      "mcp__quip__search_documents",
+      "mcp__quip__list_folder",
+      "mcp__quip__get_document_comments",
+      "mcp__quip__search_in_document",
+      "mcp__glean__search",
+      "mcp__glean__employee_search",
+      "mcp__glean__read_document",
+      "mcp__glean__chat",
+      "mcp__glean__read_memory",
+      "mcp__glean__meeting_lookup",
+      "mcp__glean__outlook_search",
+      "mcp__glean__user_activity",
+      "mcp__claude_ai_Slack__slack_read_channel",
+      "mcp__claude_ai_Slack__slack_read_thread",
+      "mcp__claude_ai_Slack__slack_search_public",
+      "mcp__claude_ai_Slack__slack_search_public_and_private",
+      "mcp__claude_ai_Slack__slack_search_users",
+      "mcp__claude_ai_Slack__slack_read_user_profile",
+      "mcp__claude_ai_Slack__slack_read_canvas",
+      "mcp__claude_ai_Slack__slack_send_message_draft",
+      "mcp__jira__get_jira_issue",
+      "mcp__jira__search_jira_issues",
+      "mcp__jira__get_confluence_page",
+      "mcp__jira__search_confluence_pages",
+      "mcp__jira__cql_search_confluence",
+      "mcp__jira__get_jira_projects",
+      "mcp__jira__get_single_project",
+      "mcp__jira__get_jira_issue_fields",
+      "mcp__jira__get_confluence_templates",
+      "mcp__claude_ai_Atlassian__getJiraIssue",
+      "mcp__claude_ai_Atlassian__searchJiraIssuesUsingJql",
+      "mcp__claude_ai_Atlassian__getConfluencePage",
+      "mcp__claude_ai_Atlassian__searchConfluenceUsingCql",
+      "mcp__claude_ai_Atlassian__searchAtlassian",
+      "mcp__claude_ai_Atlassian__getConfluencePageDescendants",
+      "mcp__claude_ai_Atlassian__getConfluencePageFooterComments",
+      "mcp__claude_ai_Atlassian__getConfluencePageInlineComments",
+      "mcp__claude_ai_Atlassian__getConfluenceSpaces",
+      "mcp__claude_ai_Atlassian__getPagesInConfluenceSpace",
+      "mcp__claude_ai_Atlassian__getVisibleJiraProjects",
+      "mcp__claude_ai_Atlassian__getJiraProjectIssueTypesMetadata",
+      "mcp__claude_ai_Atlassian__getJiraIssueTypeMetaWithFields",
+      "mcp__claude_ai_Atlassian__getJiraIssueRemoteIssueLinks",
+      "mcp__claude_ai_Atlassian__getTransitionsForJiraIssue",
+      "mcp__claude_ai_Atlassian__lookupJiraAccountId",
+      "mcp__claude_ai_Atlassian__atlassianUserInfo",
+      "mcp__claude_ai_Atlassian__getAccessibleAtlassianResources",
+      "mcp__claude_ai_Atlassian__fetchAtlassian",
+      "mcp__llama-swap__ask_qwen",
+      "mcp__llama-swap__ask_glm"
+    ]
+  },
+  "model": "opus",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/guard-bash.sh",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__claude_ai_Slack__slack_send_message",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/guard-slack-send.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/format-on-write.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "code-lsp@rms-skills": true,
+    "claude-skills@rms-skills": true,
+    "design-review-agent@rms-skills": true,
+    "git-workflow@rms-skills": true,
+    "grafana-integration@rms-skills": true,
+    "jira-integration@rms-skills": true,
+    "quip-integration@rms-skills": false,
+    "rms-oncall@rms-skills": true,
+    "splunk-integration@rms-skills": true,
+    "standup-skill@rms-skills": true,
+    "warp@claude-code-warp": true,
+    "jira-flow@rms-skills": true,
+    "plugin-guide@rms-skills": true,
+    "aar@rms-skills": true,
+    "rms-integrations-skills@rms-skills": true
+  },
+  "extraKnownMarketplaces": {
+    "rms-skills": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/axon-productivity/plugin-marketplace.git"
+      }
+    },
+    "claude-code-warp": {
+      "source": {
+        "source": "github",
+        "repo": "warpdotdev/claude-code-warp"
+      }
+    }
+  },
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "tui": "fullscreen",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: None configured",
+      "**Cloud provider(s)**: Azure (evidence: `az` CLI 99× in shell history; `az_login_ag1` alias) and Kubernetes (evidence: `kubectl` 85×, `argocd-*` Makefile targets)",
+      "**Repository visibility**: assume private unless the remote host and repo name indicate otherwise, or a visibility check in the transcript shows public — not queryable here (repo has no remotes)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: None configured",
+      "**Default / protected branches**: unknown — origin/HEAD unset, no remotes configured for this repo",
+      "**CI/CD deploy targets**: None configured",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured — assume Claude Code runs on an ordinary developer machine or CI runner with open internet",
+      "### Trust",
+      "**Source control**: The trusted repo and its remote(s) only (no additional orgs configured) — as scoped by the Trusted repo and Repository visibility entries above; this repo currently has no remotes configured",
+      "**Trusted internal domains**: nexus.taservs.net (package registry), containers.git.taservs.net (container image registry)",
+      "**Trusted cloud buckets**: None configured — no bucket name met the usage-corroboration bar (see notes)",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: nexus.taservs.net",
+      "### Sensitivity",
+      "**Sensitive data locations & audiences**: als-infra/infra/*.generated_secrets.yaml and *.hierasecrets.yaml (per-environment secrets manifests across many regions: ag1, au1, ca1, de1, dv1, eu1, la1, la2, nl1, nl2, nl3, uk2, us1, us2, us3), als-infra/.envrc, als-infra/.secrets.baseline, AzureDataFactory/.cursor/rules/adf-secrets-security.mdc — share only with audiences cleared at the [named+specifics] bar",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment",
+      "**Protected deployment namespaces / environments**: None configured — fall back to the Sensitive remote targets heuristic",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment; also treat als-infra/infra/*.hierasecrets.yaml and *.generated_secrets.yaml and argo-apps/*/iam/* as protected IaC scopes",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development, with heavy use of git, Azure CLI, kubectl, and internal `rms-tools`/`als` tooling",
+      "**Trusted repo**: The git repository the agent started in (its working directory)",
+      "**Org-specific CLIs**: rms-tools, als (internal alias/tool seen 27× in shell history), gcm/gco/gb/gs/glog/gbD (git aliases)",
+      "**routine under the profile branch prefix**: per CLAUDE.md, git branch names use the `<PROFILE_WORK_USER>/` prefix convention for this user's work"
+    ]
+  },
+  "voiceEnabled": true
+}

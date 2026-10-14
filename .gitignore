@@ -1,0 +1,9 @@
+# Dotfiles repo (work tree = $HOME): local-only files that must never be committed.
+# Other repos under $HOME have their own roots, so this file doesn't affect them.
+.env/profile.sh
+.env/local.sh
+.env/work.sh
+.gitconfig.local
+.gitconfig.work
+.ssh/config.work
+mac_bootstrap/Brewfile.work

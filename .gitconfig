@@ -1,6 +1,3 @@
-[user]
-    name = Aaron Roethe
-
 [init]
     defaultBranch = master
 
@@ -41,9 +38,7 @@
 [submodule]
     recurse = true
 
-[url "git@github-personal:AaronRoethe/"]
-	insteadOf = https://github.com/AaronRoethe/
-
-# Work email and host rewrites live in an untracked file
+# Untracked: personal identity (generated from ~/.env/profile.sh), then work email and hosts
 [include]
+    path = ~/.gitconfig.local
     path = ~/.gitconfig.work
